@@ -27,11 +27,11 @@ class MediaRenderer1 extends Device {
 
         this._updateAccessory(description);
 
-        let switchService = this.accessory.getService(homebridge.hap.Service.Lightbulb);
+        let switchService = this.accessory.getService(homebridge.hap.Service.Speaker);
 
         if (!switchService) {
-            this.accessory.addService(homebridge.hap.Service.Lightbulb);
-            switchService = this.accessory.getService(homebridge.hap.Service.Lightbulb)
+            this.accessory.addService(homebridge.hap.Service.Speaker);
+            switchService = this.accessory.getService(homebridge.hap.Service.Speaker)
         }
 
         switchService.getCharacteristic(homebridge.hap.Characteristic.On)
@@ -47,7 +47,7 @@ class MediaRenderer1 extends Device {
             })
             .on('set', (value, callback) => this._setMute(!value, callback));
 
-        switchService.getCharacteristic(homebridge.hap.Characteristic.Brightness)
+        switchService.getCharacteristic(homebridge.hap.Characteristic.Volume)
             .on('get', this._getVolume.bind(this))
             .on('set', this._setVolume.bind(this));
     }
@@ -83,7 +83,7 @@ class MediaRenderer1 extends Device {
                 return;
             }
 
-            this.accessory.getService(homebridge.hap.Service.Lightbulb).getCharacteristic(homebridge.hap.Characteristic.On).updateValue(!value);
+            this.accessory.getService(homebridge.hap.Service.Speaker).getCharacteristic(homebridge.hap.Characteristic.On).updateValue(!value);
         });
 
         this._getVolume((err, value) => {
@@ -92,12 +92,12 @@ class MediaRenderer1 extends Device {
                 return;
             }
 
-            this.accessory.getService(homebridge.hap.Service.Lightbulb).getCharacteristic(homebridge.hap.Characteristic.Brightness).updateValue(value);
+            this.accessory.getService(homebridge.hap.Service.Speaker).getCharacteristic(homebridge.hap.Characteristic.Volume).updateValue(value);
         });
     }
 
     onBye() {
-        this.accessory.getService(homebridge.hap.Service.Lightbulb).getCharacteristic(homebridge.hap.Characteristic.On).updateValue(false);
+        this.accessory.getService(homebridge.hap.Service.Speaker).getCharacteristic(homebridge.hap.Characteristic.On).updateValue(false);
     }
 
     stop() {
@@ -110,13 +110,13 @@ class MediaRenderer1 extends Device {
         if (event.Volume) {
             const volume = parseInt(event.Volume);
 
-            this.accessory.getService(homebridge.hap.Service.Lightbulb).getCharacteristic(homebridge.hap.Characteristic.Brightness).updateValue(volume);
+            this.accessory.getService(homebridge.hap.Service.Speaker).getCharacteristic(homebridge.hap.Characteristic.Volume).updateValue(volume);
         }
 
         if (event.Mute) {
             const mute = Boolean(parseInt(event.Mute));
 
-            this.accessory.getService(homebridge.hap.Service.Lightbulb).getCharacteristic(homebridge.hap.Characteristic.On).updateValue(!mute);
+            this.accessory.getService(homebridge.hap.Service.Speaker).getCharacteristic(homebridge.hap.Characteristic.On).updateValue(!mute);
         }
     }
 
